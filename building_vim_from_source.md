@@ -1,0 +1,3 @@
+> 参考文章：https://github.com/ycm-core/YouCompleteMe/wiki/Building-Vim-from-source
+
+这篇文章说得很清楚，我已经没有什么要补充的了……
