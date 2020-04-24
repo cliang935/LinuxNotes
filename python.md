@@ -658,3 +658,75 @@
 
 ## 模块
 
+1. 一个`.py`就是一个模块（module）
+
+2. 包（package）：
+
+   ```ascii
+   mycompany
+   ├─ __init__.py # 可以是空文件，必须存在，否则会被视为普通目录
+   ├─ abc.py
+   └─ xyz.py
+   ```
+
+3. 模块名不要和系统模块名冲突，最好先查看系统是否已存在该模块
+
+4. 检查方法是在Python交互环境执行`import abc`，若成功则说明系统存在此模块
+
+5. ```python
+   #!/usr/bin/env python3
+   # -*- coding: utf-8 -*-
+   
+   ' a test module ' # 任何模块代码的第一个字符串都被视为模块的文档注释，__doc__
+   
+   __author__ = 'Michael Liao'
+   
+   import sys
+   
+   def test():
+       pass
+   
+   if __name__=='__main__':
+       test()
+   ```
+
+   > 当我们在命令行运行模块文件时，Python解释器把一个特殊变量`__name__`置为`__main__`
+   >
+   > 而如果在其他地方导入该模块时，`if`判断将失败
+   >
+   > 这种`if`测试可以让一个模块通过命令行运行时执行一些额外的代码，最常见的就是运行测试。
+
+6. 非公开的函数或变量（private）
+
+   - `__xx__`：特殊魔法
+   - `_x 或 __x`：私有，Python并没有一种方法可以完全限制访问private函数或变量，可以说是在遵守约定俗成习惯下的私有，可以用特殊方法在外部调用
+   - 外部不需要引用的函数全部定义成private，只有外部需要引用的函数才定义为public
+
+7. 安装第三方模块：https://pypi.org/
+
+   - 包管理工具`pip`
+
+   - [anaconda](https://www.anaconda.com/)
+
+   - 模块搜索路径：
+
+     默认情况下，Python解释器会搜索当前目录、所有已安装的内置模块和第三方模块，搜索路径存放在`sys`模块的`path`变量中：
+
+     ```python
+     >>> import sys
+     >>> sys.path
+     ```
+
+   - 添加自己的搜索目录：
+
+     1. 在运行时修改，运行结束后失效
+
+        ```python
+        >>> import sys
+        >>> sys.path.append('/Users/michael/my_py_scripts')
+        ```
+
+     2. 设置环境变量`PYTHONPATH`
+
+## OOP
+
