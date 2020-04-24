@@ -201,7 +201,7 @@
 
 1. 切片(Slice)
 
-   对列表、元祖、字符串切片，`list1[0:3]`，`list1[:3]`，`list1[-2:]`，`list1[-2:-1]`，`list1[-1]`，`list1[:]`，`list1[::2]`，切片操作就是对字符串的截取函数。
+   对列表、元祖、字符串切片，`list1[0:3]`，`list1[:3]`，`list1[-2:]`，`list1[-2:-1]`，`list1[-1]`，`list1[:]`，`list1[::2]`，`list1[::-1]`切片操作就是对字符串的截取函数。
 
 2. 迭代(Iteration)
 
@@ -416,3 +416,245 @@
            # 遇到StopIteration就退出循环
            break
    ```
+
+## 函数式编程
+
+### 高阶函数
+
+1. 函数名就是变量，函数名指向这个函数。
+
+2. **把函数作为参数传入，这样的函数称为高阶函数**，函数式编程就是指这种高度抽象的编程范式。
+
+3. `map()`，`reduce()`高阶函数：
+
+   - `map(fun， Iterable)`：第一个参数是函数，第二个参数是可迭代对象，过程是函数作用在可迭代对象上，结果是返回一个迭代器（惰性序列，每`next()`一次，返回一个值）；
+
+   - `reduce(fun, 序列)`：同样是函数作用在序列上，**要求函数必须包括2个参数**，过程是把函数作用在序列上的结果与序列的下一个元素作为函数的2个参数累积作用；
+
+   - practice 1：实现`int()`函数功能
+
+     ```python
+     from functools import reduce
+     
+     DATA = {'0':0, '1':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, '9':9}
+     
+     def str2int(s):
+         def fn(x, y):
+             return x * 10 + y
+         def char2nums(c):
+             return DATA[c]
+         return reduce(fn, map(char2nums, s))
+     ```
+
+   - practice 2：利用`map()`函数，把用户输入的不规范的英文名，变为首字母大写，其他小写的规范名
+
+     ```python
+     #!/usr/bin/env python3
+     # -*- coding: utf-8 -*-
+     
+     def normalize(name):
+         def low(name):
+             return name.lower()
+         def up(name):
+             return name.capitalize()
+         return map(up, map(low, name))
+     
+     if __name__ == "__main__":
+         name = ['adam', 'LISA', 'barT']
+         Name = normalize(name)
+         print(list(Name))
+     ```
+
+   - `sum()`函数可以接受一个list并求和，编写一个`prod()`函数，可以接受一个list并利用`reduce()`求积
+
+     ```python
+     #!usr/bin/env python3
+     # -*- coding: utf-8 -*-
+     
+     from functools import reduce
+     
+     def prod(lis):
+         return reduce(lambda x, y: x * y, lis)
+     
+     if __name__ == "__main__":
+         print('3 * 5 * 7 * 9 =', prod([3, 5, 7, 9]))
+         if prod([3, 5, 7, 9]) == 945:
+             print('测试成功!')
+         else:
+             print('测试失败!')
+     ```
+
+   - practice 3：利用`map`和`reduce`编写一个`str2float`函数，把字符串转换成浮点数
+
+     ```python
+     #!/usr/bin/env python3
+     # -*- coding: utf-8 -*-
+     
+     from functools import reduce
+     
+     DIGITS = {'0':0, '1':1, '2':2, '3':3, '4':4, '5':5, '6':6, '7':7, '8':8, '9':9}
+     
+     def str2float(s):
+         def char2nums(c):
+             return DIGITS[c]  
+         def fn(x, y):
+             return x * 10 + y
+         S = s.split('.')
+         return reduce(fn, map(char2nums, S[0]) + reduce(fn, map(char2nums, S[1])) / (10**(len(S[1]))) 
+                       
+     if __name__ == "__main__":
+     	print('str2float(\'123.456789\') =', str2float('123.456789'))
+     ```
+
+4. `filter()`筛选函数：
+
+   - 过滤序列，接收一个函数，一个序列，返回的是迭代器，惰性序列，`next()`调用，可以用`list()`转换
+
+   - practice 1：筛选素数，[埃氏筛选法](https://zh.wikipedia.org/wiki/埃拉托斯特尼筛法)
+
+     ```python
+     #!/usr/bin/env python3
+     # -*- coding: utf-8 -*-
+     
+     def main():
+         for n in primes():
+             if n < 1000:
+                 print(n)
+             else:
+                 break
+     
+     def odd_iter():
+         n = 1 
+         while True:
+             n = n + 2
+             yield n
+     
+     def not_divisible(n):
+         return lambda x: x % n > 0
+     
+     def primes():
+         yield 2
+         it = odd_iter()
+         while True:
+             n = next(it)
+             yield n
+             it = filter(not_divisible(n), it)
+     
+     if __name__ == "__main__":
+         main()
+     ```
+
+   - practice 2：请利用`filter()`筛选出回数
+
+     ```python
+     def huishu(n):
+         if str(n) == str(n)[::-1]:
+             return n
+     
+     print(list(filter(huishu, range(1000))))
+     ```
+
+5. `sorted()`也是一个高阶函数
+
+   - `sorted(L, key, reverse=True)`
+   - ***`key`函数作用于`L`的每个元素，`key`的参数是`L[0], L[1]...`，不是`L`***
+
+   - 反向排序：添加参数`reverse=True`
+
+   - practice 1：对元祖tuple分别按照姓名和成绩排序
+
+     ```python
+     # -*- coding: utf-8 -*-
+     
+     L = [('Bob', 75), ('Adam', 92), ('Bart', 66), ('Lisa', 88)]
+     
+     def by_name(t):
+         return t[0]
+     
+     def by_score(t):
+         return t[1]
+     
+     L1 = sorted(L, key=by_name)
+     L2 = sorted(L, key=by_score, reverse=True)
+     print(L1)
+     print(L2)
+     ```
+
+     也可以用`lambda`代替函数定义：
+
+     ```python
+     # -*- coding: utf-8 -*-
+     
+     L = [('Bob', 75), ('Adam', 92), ('Bart', 66), ('Lisa', 88)]
+     
+     L1 = sorted(L, key=lambda t: t[0])
+     L2 = sorted(L, key=lambda t: t[1], reverse=True)
+     
+     print(L1)
+     print(L2)
+     ```
+
+
+### 返回函数
+
+1. 函数不仅可以接受函数作为参数，也可以把函数作为返回值返回
+
+2.  返回闭包时牢记一点：返回函数不要引用任何循环变量，或者后续会发生变化的变量
+
+3. 如果一定要引用循环变量，那就再创建一个函数
+
+4. practice 1：利用闭包返回一个计数器函数，每次调用它返回递增整数
+
+   ```python
+   # 外函数临时变量为可变类型，内函数与此变量绑定，由于是可变类型，会在原对象上更改而不会创建新对象
+   
+   def createCounter():
+       c=[0]
+       def counter():
+           c[0]+=1
+           return c[0]
+       return counter
+   
+   if __name__ == "__main__":
+   	counterA = createCounter()
+   	print(counterA(), counterA(), counterA(), counterA(), counterA()) # 1 2 3 4 5
+      
+   ```
+
+### 匿名函数
+
+`lambda`
+
+### 装饰器（decorator）
+
+> 不太懂？？？？？？？？？以后用到再回来看看。
+
+1. 接受一个函数作为参数，并返回一个函数
+
+2. 在面向对象（OOP）的设计模式中，decorator被称为装饰模式
+
+3. 学习参考代码：[decorator](https://github.com/michaelliao/learn-python3/blob/master/samples/functional/decorator.py)
+
+4. practice：请设计一个decorator，它可作用于任何函数上，并打印该函数的执行时间
+
+   ```python
+   # 待完成
+   ```
+
+### 偏函数
+
+1. `functools.partial`
+
+2. 把一个函数的某些参数给固定住（也就是设置默认值），返回一个新的函数，使得调用这个新函数更简单
+
+3. ```python
+   >>> import functools
+   >>> int2 = functools.partial(int, base=2) # base二进制转换
+   >>> int2('1000000')
+   64
+   >>> int2('1010101')
+   85
+   ```
+
+## 模块
+
