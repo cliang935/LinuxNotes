@@ -7,8 +7,8 @@
 5. [python notes](https://github.com/cliangx/LinuxNotes/blob/master/python.md)
 6. [vimrc config](https://github.com/cliang935/Notes/blob/master/.vimrc)
 7. [gvim auto plugin](https://www.vim.org/scripts/script.php?script_id=4067)
- > copy `automatic.vim` to your install directory `C:\Program Files (x86)\Vim\vim81\plugin`
- > then restart gvim to overload menu
+  > copy `automatic.vim` to your install directory `C:\Program Files (x86)\Vim\vim81\plugin`
+  > then restart gvim to overload menu
 ## related to IC
 > IC(Integrated Circuit)
 1. [知乎链接](https://www.zhihu.com/collection/547199537)
