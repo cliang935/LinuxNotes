@@ -11,6 +11,8 @@
 > IC(Integrated Circuit)
 1. [知乎链接](https://www.zhihu.com/collection/547199537)
 2. [AXI4_specification.pdf](http://www.gstitt.ece.ufl.edu/courses/fall15/eel4720_5721/labs/refs/AXI4_specification.pdf)
+3. [SerDes维基百科](https://en.wikipedia.org/wiki/SerDes)
+4. [serdes_zhi_shi_xiang_jie_.pdf](http://xilinx.eetrend.com/files-eetrend-xilinx/forum/201709/11981-32468-serdeszhi_shi_xiang_jie_.pdf)
 ## related to CNN
 > CNN(Convolutional Neural Network)
 1. [知乎链接](https://www.zhihu.com/collection/568084211)
